@@ -10,7 +10,7 @@ class NewsController extends Controller
 
     public function index()
     {
-        $notices = Notice::all(); //get all, mostra todas as noticias
+        $notices = Notice::all(); //GET all, mostra todas as noticias
 
         return response()->json([
             'notices' => $notices
@@ -19,7 +19,7 @@ class NewsController extends Controller
 
     public function store(Request $request)
     {
-        $notice = new Notice; //inserindo nova noticia
+        $notice = new Notice; //inserindo nova noticia (POST)
 
         //tabelas da migrations
         $notice->titleNotice = $request->titleNotice; //preenche o titulo da noticia
@@ -28,14 +28,14 @@ class NewsController extends Controller
 
         $notice->save(); //metodo do model para cadastrar
 
-        return response()->json([
+        return response()->json([ //retorna uma mensagem json cadastrando uma nova noticia
             'message'=> 'Notícia cadastrada com sucesso!'
         ]);
     }
 
     public function show($id)
     {
-        $notice = Notice::find($id); //getfind busca somente o id da noticia
+        $notice = Notice::find($id); //GETfind busca somente o id da noticia
 
         return response()->json([
             'notice' => $notice
@@ -44,15 +44,22 @@ class NewsController extends Controller
 
     public function update(Request $request, $id)
     {
-        return response()->json([
-            'rota' => 'update'
+        $notice = Notice::find($id);
+        $notice->update($request->all());
+
+        return response()->json([ //retorna uma mensagem json deletando uma nova noticia
+            'message'=>  'Alteração feita com sucesso!'
         ]);
-    }
+    }   
 
     public function destroy($id)
     {
-        return response()->json([
-            'rota' => 'destroy'
+        $notice = Notice::find($id);
+
+        $notice->delete(); //método para deletar a noticia inserida
+
+        return response()->json([ //retorna uma mensagem json deletando uma nova noticia
+            'message'=> 'Notícia deletada com sucesso!'
         ]);
     }
 }
